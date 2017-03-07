@@ -1,3 +1,4 @@
+require 'pry'
 class PostsController < ApplicationController
   before_action :set_post, only: [:show, :edit, :update, :destroy]
 
@@ -6,6 +7,8 @@ class PostsController < ApplicationController
   end
 
   def show
+    @comments = Comment.all
+    @comment = Comment.new
   end
 
   def new
@@ -43,6 +46,9 @@ class PostsController < ApplicationController
 
   def destroy
     @post.destroy
+    @post.comments.each do |comment|
+      comment.destroy
+    end
     respond_to do |format|
       format.html { redirect_to posts_url }
       format.json { head :no_content }
